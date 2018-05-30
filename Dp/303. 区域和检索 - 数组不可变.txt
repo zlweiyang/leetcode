@@ -1,0 +1,62 @@
+class NumArray {
+     
+    int[] arr;
+
+    public NumArray(int[] nums) {
+        
+        arr = new int[nums.length];
+        for(int i= 0;i<nums.length;i++){
+            arr[i] = nums[i];
+        }
+        
+    }
+    
+    public int sumRange(int i, int j) {
+        int sum = 0;
+        for(int k = i;k<j + 1;k++){
+            sum = sum + arr[k];
+        }
+        
+        return sum;
+        
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * int param_1 = obj.sumRange(i,j);
+ */
+
+//超出时间限制
+
+
+第二种解法，这个题目困扰的主要是数组传递问题，感觉没啥意思，运用简单的动态规划思想。
+class NumArray {
+     
+    int[] arr;
+
+    public NumArray(int[] nums) {
+        int sum = 0;
+        arr = new int[nums.length];
+        for(int i= 0;i<nums.length;i++){
+            sum = sum + nums[i];
+            arr[i] = sum;
+        }
+        
+    }
+    
+    public int sumRange(int i, int j) {
+        if(i == 0){
+            return arr[j];
+        }
+      return arr[j] - arr[i-1];
+        
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * int param_1 = obj.sumRange(i,j);
+ */
