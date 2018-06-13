@@ -1,0 +1,53 @@
+爱丽丝有一手（hand）由整数数组给定的牌。 
+
+现在她想把牌重新排列成组，使得每个组的大小都是 W，且由 W 张连续的牌组成。
+
+如果她可以完成分组就返回 true，否则返回 false。
+
+ 
+
+示例 1：
+
+输入：hand = [1,2,3,6,2,3,4,7,8], W = 3
+输出：true
+解释：爱丽丝的手牌可以被重新排列为 [1,2,3]，[2,3,4]，[6,7,8]。
+示例 2：
+
+输入：hand = [1,2,3,4,5], W = 4
+输出：false
+解释：爱丽丝的手牌无法被重新排列成几个大小为 4 的组。
+ class Solution {
+    public boolean isNStraightHand(int[] hand, int W) {
+        
+        int len = hand.length;
+        if(len%W!=0){
+            return false;
+        }
+        Arrays.sort(hand);
+        int[]flag = new int[len];//设置标记数组，初始值为默认的0，被使用之后相应位置置为1 
+        for(int i=0;i<len;i++){
+            if(flag[i] == 0){//flag[i] == 0代表hand[i]未被使用
+                int count=1;//设置分组数量，初始值为1，后面将与w进行比较
+                flag[i] = 1;//hand[i]的数字被使用
+                int j = i+1;
+                int num = hand[i];//后面num+1将与hand[j]进行比较
+                while(count<W){//先完成一次遍历，在count的最大值只可能小于等于情况下
+                    if(j>=len){//等号很关键啊，要不然flag[j]就越界啦
+                        break;//关键一步!!!找完后发现无法找齐W个连续的牌，这直接通过count！=W返回false
+                    }
+                    if(flag[j]==0 && hand[j]==num+1){//在hand[j]未被使用的情况下，第一次当然未被使用，这样设计主要是为了后续可能会被使用的情况
+                        count++;
+                        num = hand[j];//num值每一次比较之后要更新为最新的值，方便与下一个连续值比较
+                        flag[j] = 1;//hand[j]也被使用
+                    }
+                    j++;
+                }
+                if(count != W){
+                    return false;
+                }//有一组没找全，就返回false
+            }
+        }
+        return true;//没有返回false就说明遍历完所有的牌后正好完成分组
+        
+    }
+}
