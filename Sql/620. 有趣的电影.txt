@@ -1,0 +1,7 @@
+# Write your MySQL query statement below
+select id,movie,description,rating from cinema where description !='boring' and mod(id,2) = 1 order by rating desc
+//select查找所有的列名
+mod求余数
+order排序
+desc降序排列
+
