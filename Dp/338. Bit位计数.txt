@@ -1,0 +1,48 @@
+给定一个非负整数 num。 对于范围 0 ≤ i ≤ num 中的每个数字 i ，计算其二进制数中的1的数目并将它们作为数组返回。
+
+示例：
+比如给定 num = 5 ，应该返回 [0,1,1,2,1,2].
+
+解法一：给出自己最愚蠢的做法（纯属讽刺自己）
+
+class Solution {
+    public int[] countBits(int num) {
+        
+       
+        int [] re = new int[num+1];
+        for(int i=0;i<=num;i++){
+            String binary = Integer.toBinaryString(i);
+            char[] result = new char[binary.length()];
+            result = binary.toCharArray();
+            int count =0 ;
+            int[]res = new int[binary.length()];
+            for(int j=0;j<binary.length();j++){
+                 res[j] = (int)(result[j]-48);
+                if(res[j] == 1){
+                    count++;
+                }
+           }
+            re[i] = count;
+        }
+        
+        return re;
+        
+    }
+}
+
+解法二：最正确的解法
+
+首先记住一个规律i&(i-1)=0时，i是2的指数 i&(i-1)+1代表i二进制中1的个数
+DP通项 result[i] = result[i&(i-1)] +1;
+class Solution {
+    public int[] countBits(int num) {
+        
+      int [] result = new int[num+1];
+      result[0] = 0;
+      for(int i=1;i<=num;i++){
+          result[i] = result[i&(i-1)] +1;
+      }
+       return result;
+        
+    }
+}
