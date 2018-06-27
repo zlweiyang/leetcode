@@ -1,0 +1,27 @@
+给定一个整型数组，在数组中找出由三个数组成的最大乘积，并输出这个乘积。
+
+示例 1:
+
+输入: [1,2,3]
+输出: 6
+示例 2:
+
+输入: [1,2,3,4]
+输出: 24
+
+class Solution {
+    public int maximumProduct(int[] nums) {
+        
+          Arrays.sort(nums);
+          int max = 1;
+          int max1 = 1;
+         
+          max = nums[0]*nums[1]*nums[nums.length - 1];
+         
+          max1 = nums[nums.length - 1]*nums[nums.length - 2]*nums[nums.length - 3];
+    
+          return max >= max1 ? max : max1;  
+      
+        
+    }
+}
