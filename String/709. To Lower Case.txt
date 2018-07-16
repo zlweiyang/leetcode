@@ -1,0 +1,13 @@
+class Solution {
+    public String toLowerCase(String str) {
+        char[] ch = new char[str.length()];
+        for(int i=0;i<str.length();i++){
+            if('A'<=str.charAt(i) && str.charAt(i) <= 'Z' ){
+                ch[i] = Character.toLowerCase(str.charAt(i));
+            }else{
+                ch[i] = str.charAt(i);
+            }
+        }
+        return str.valueOf(ch);
+    }
+}
