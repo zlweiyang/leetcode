@@ -1,0 +1,68 @@
+637. 二叉树的层平均值
+
+给定一个非空二叉树, 返回一个由每层节点平均值组成的数组.
+
+示例 1:
+
+输入:
+    3
+   / \
+  9  20
+    /  \
+   15   7
+输出: [3, 14.5, 11]
+解释:
+第0层的平均值是 3,  第1层是 14.5, 第2层是 11. 因此返回 [3, 14.5, 11].
+注意：
+
+节点值的范围在32位有符号整数范围内。
+您是否在真实的面试环节中遇到过这道题目呢？  
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Double> averageOfLevels(TreeNode root) {
+        
+        
+        ArrayList<Double> result = new ArrayList<Double>();
+        if(root == null)
+            return result;
+        //在java中Queue为接口，需要借助其子类进行实例化
+        Queue<TreeNode> queue = new LinkedList();//树的层次遍历一般采用一个队列进行存储数值
+        queue.offer(root);
+        int oldlevelcount = 1;//当前层节点数，做自减操作，用于判断当前层节点是否遍历完
+        int nowlevelcount = 1;//保存当前节点数，用于计算均值
+        int nextlevelcount = 0;//用于保存下一层节点数，当前层节点遍历完之后，将其赋给oldlevelcount
+        double levelavrage = 0.0;//保留每一层均值，一一添加入List
+        while(!queue.isEmpty()){
+            
+            TreeNode node = queue.poll();//移除队列中的值
+            oldlevelcount--;//每移除一个值当前节点数自减1
+            levelavrage += node.val;//将每个节点的值累加
+            if(node.left != null){//如果左孩子不为空则遍历左孩子，且下一个节点数量加1
+                queue.offer(node.left);
+                nextlevelcount++;
+            }
+            if(node.right != null){
+                queue.offer(node.right);
+                nextlevelcount++;
+            }
+            if(oldlevelcount == 0){//当oldlevelcount == 0时，当前所在层节点已经遍历结束
+                result.add(levelavrage/nowlevelcount);//将均值添加进List
+                nowlevelcount = nextlevelcount;//下一层节点数变为当前层
+                oldlevelcount = nowlevelcount;//用于判断这一层节点是否遍历完
+                nextlevelcount = 0;//下一层变为0
+                levelavrage = 0.0;//均值变为0
+            }
+        }
+        return result;
+        
+    }
+}
