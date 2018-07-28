@@ -1,0 +1,55 @@
+给定一个二叉树，检查它是否是镜像对称的。
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+   
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+//没有动脑筋
+//大体思路是对的：左孩子的左孩子值必须等于右孩子的右孩子，左孩子的右孩子必须等于右孩子的左孩子
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        
+       if(root == NULL){
+           return true;
+       }
+       return isSame(root->left,root->right);
+        
+    }
+    bool isSame(TreeNode *left,TreeNode *right){
+        if(left == NULL && right == NULL){
+            return true;
+        }
+        else if(left == NULL){
+            return false;
+        }
+        else if(right ==NULL){
+            return false;
+        }
+        else if(left->val == right->val){
+            //左孩子的左孩子值必须等于右孩子的右孩子，左孩子的右孩子必须等于右孩子的左孩子
+            return isSame(left->left,right->right)&&isSame(left->right,right->left);//变量应该跟随叶子节点按两倍规律增大
+        }
+        return false;
+    }
+};
