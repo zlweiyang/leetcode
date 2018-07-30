@@ -1,0 +1,80 @@
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例：
+给定二叉树 [3,9,20,null,null,15,7]，
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回它的最大深度 3 。
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 解法一：我的解法是根据二叉树的层平均值那道题来的，思路十分简单，但明显不好，
+class Solution {
+    public int maxDepth(TreeNode root) {
+           
+           if(root == null){
+               return 0;
+           }
+           int result = 0;     
+           Queue<TreeNode> queue = new LinkedList();
+           queue.offer(root);
+           int oldlevelcount = 1;
+           int nextlevelcount = 0;
+           while(!queue.isEmpty()){
+               TreeNode node = queue.poll();
+               oldlevelcount--;
+               if(node.left !=null){
+                   queue.offer(node.left);
+                   nextlevelcount++;
+               }
+               if(node.right !=null){
+                   queue.offer(node.right);
+                   nextlevelcount++;
+               }
+               if(oldlevelcount == 0){
+                   oldlevelcount = nextlevelcount;
+                   nextlevelcount = 0;
+                   result++;
+               }
+           }
+        return result;
+        
+    }
+}
+解法二：递归法：分别递归左右节点的深度求最大值
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == NULL){
+            return 0;
+        }
+        int left_depth = maxDepth(root->left);
+        int right_depth = maxDepth(root->right);
+        
+        return max(left_depth,right_depth)+1;
+    }
+};
