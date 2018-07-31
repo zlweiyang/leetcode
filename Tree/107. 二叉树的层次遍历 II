@@ -1,0 +1,71 @@
+给定一个二叉树，返回其节点值自底向上的层次遍历。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+
+例如：
+给定二叉树 [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其自底向上的层次遍历为：
+
+[
+  [15,7],
+  [9,20],
+  [3]
+]
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        
+        
+        List<List<Integer>> result = new ArrayList<>();//双重List，Map,Set的初始化，后面都只需要一个<>
+        if(root == null){
+            return result;
+        }
+        
+        List<Integer> temp = new ArrayList<Integer>();
+        //List<Integer> temp  = null;
+        Stack<List> stack = new Stack<List>();
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        int oldlevelcount = 1;
+        int nextlevelcount = 0;
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            oldlevelcount--;
+            temp.add(node.val);
+            if(node.left != null){
+                queue.offer(node.left);
+                nextlevelcount++;
+            }
+            if(node.right != null){
+                queue.offer(node.right);
+                nextlevelcount++;
+            }
+            if(oldlevelcount == 0){
+                stack.push(temp);
+                //temp.clear();
+                //temp.removeAll();
+                temp = new ArrayList<Integer>();//这个地方重新初始化有点不科学
+                oldlevelcount = nextlevelcount;
+                nextlevelcount = 0;
+            }
+        }
+        while(!stack.empty()){
+            result.add(stack.pop());
+        }
+        return result;
+        
+    }
+}
