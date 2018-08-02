@@ -1,0 +1,74 @@
+给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例: 
+给定如下二叉树，以及目标和 sum = 22，
+
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \      \
+        7    2      1
+返回 true, 因为存在目标和为 22 的根节点到叶子节点的路径 5->4->11->2。
+
+解法一：类似穷举，分别判断，逐一讨论
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+       if(root == null){
+           return false;//如果树的根节点为空则返回false
+           
+       }
+	   //设计一个判断路径和是否相等的函数check，传入树，初始路径和为0；
+        return check(root,0,sum);
+    }
+    
+    public boolean check(TreeNode node,int sum,int a){
+        if(node == null && sum == a) return true;//用作结束条件，sum为累计的路径和
+        if(node == null) return false;//如果路径和不等于sum，返回false
+        if(node.left == null&&node.right!=null) return check(node.right,sum+node.val,a);//如果右节点有值则继续递归计算右节点
+        if(node.left!=null && node.right == null) return check(node.left,sum+node.val,a);//如果左节点有值则递归计算左节点
+        
+        return check(node.left,sum+node.val,a)||check(node.right,sum+node.val,a);//
+        
+    }
+	
+	解法二：
+	/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        if(root == NULL){
+            return false;
+        }
+        if(root->left == NULL && root->right == NULL){
+            if(root->val == sum)return true;
+            return false;
+        }
+        if(root->left == NULL) return hasPathSum(root->right,sum-root->val);
+        if(root->right == NULL) return hasPathSum(root->left,sum-root->val);
+        
+        return hasPathSum(root->left,sum-root->val)||hasPathSum(root->right,sum-root->val);
+        
+    }
+};
+}
