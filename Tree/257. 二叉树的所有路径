@@ -1,0 +1,50 @@
+给定一个二叉树，返回所有从根节点到叶子节点的路径。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例:
+
+输入:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+输出: ["1->2->5", "1->3"]
+
+解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        
+       vector<string> res;
+       if(root == NULL)  return res;
+       string temp;    
+       roadLeaf(res,temp,root);//定义判断路径函数，vector自增。
+       return res; 
+    }
+    bool roadLeaf(vector<string>& res,string s,TreeNode *root){
+        if(root == NULL) return true;
+        if(s.empty()) s = s+ to_string(root->val);//c++中的字符串与java中的字符串都可以用+号直接连接
+        else
+        s += "->"+ to_string(root->val) ;//c++中将数值转化为字符串使用to_string函数
+        bool a,b;//a,b都为真时，说明该节点为叶子节点
+        a = roadLeaf(res,s,root->left);//递归遍历
+        b= roadLeaf(res,s,root->right);
+        if(a&&b) res.push_back(s);//vector添加元素函数push_back
+        return false;
+    }
+    
+};
