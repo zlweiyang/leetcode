@@ -1,0 +1,33 @@
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+说明：
+
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+
+示例 1:
+
+输入: [2,2,1]
+输出: 1
+示例 2:
+
+输入: [4,1,2,1,2]
+输出: 4
+
+class Solution {
+    public int singleNumber(int[] nums) {
+        
+       Map <Integer,Integer> map = new HashMap<Integer,Integer>();//Map是接口，需要通过HashMap来进行实例化
+       for(int i=0;i<nums.length;i++){
+           Integer value = map.get(nums[i]);//判断map中nums[i]的个数，此处使用包装类Integer
+           map.put(nums[i],(value == null? 0:value)+1);//计算num[i]的个数并与num[i]形成键值对，进行存储
+       }
+       for(Map.Entry<Integer,Integer> entry : map.entrySet()){//map的遍历方式
+           if(entry.getValue() == 1){//获得map中的值
+               return entry.getKey();//获得map中的键值
+           }
+       }
+        
+        return -1;
+        
+    }
+}
