@@ -1,0 +1,49 @@
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的一个字母异位词。
+
+示例 1:
+
+输入: s = "anagram", t = "nagaram"
+输出: true
+示例 2:
+
+输入: s = "rat", t = "car"
+输出: false
+说明:
+你可以假设字符串只包含小写字母。
+
+进阶:
+如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+//         if(s.length()!=t.length()) return false;
+//         Map<Character,Integer> map = new HashMap<Character,Integer>();
+//         for(int i=0;i<s.length();i++){
+//             Integer value = map.get(s.charAt(i));
+//             map.put(s.charAt(i),(value == null? 0:value)+1);
+//         }
+//         Map<Character,Integer> map1 = new HashMap<Character,Integer>();
+//         for(int j=0;j<t.length();j++){
+//            Integer value = map.get(t.charAt(j));
+//            map.put(t.charAt(j),(value == null? 0:value)+1);
+//         }
+        
+//         for(Map.Entry<Character,Integer> entry:map.entrySet()){
+//             for(Map.Entry<Character,Integer> entry1:map1.entrySet()){
+//                 if(!entry1.getKey().containsKey(entry.getKey())){
+//                     return false;
+//                 }else{
+//                     if(entry1.getValue() != entry.getValue()){
+//                         return false;
+//                     }
+//                 }
+//             }
+//         }
+//         return true;
+        int [] letter = new int[26];
+        for(int i=0;i<s.length();i++) letter[s.charAt(i) - 'a']++;
+        for(int i=0;i<t.length();i++) letter[t.charAt(i) - 'a']--;
+        for(int i:letter) if(i!=0) return false;
+        return true;
+    }
+}
