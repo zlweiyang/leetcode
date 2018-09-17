@@ -40,6 +40,8 @@ class Solution {
     }
 }
 
+
+
 解法二：从两边开始判断并查找，30ms时间复杂度应该只有O(n)
 class Solution {
 public:
