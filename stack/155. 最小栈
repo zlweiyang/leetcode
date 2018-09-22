@@ -1,0 +1,41 @@
+class MinStack {
+    
+    public int []array = new int[10000];
+    public int size;
+
+    /** initialize your data structure here. */
+    public MinStack() {
+        size = 0;
+    }
+    
+    public void push(int x) {
+        array[size++] = x;
+    }
+    
+    public void pop() {
+        size--;
+    }
+    
+    public int top() {
+        return array[size-1];
+    }
+    
+    public int getMin() {
+        int min = array[0];
+        for(int i=1;i<size;i++){
+            min = Math.min(min,array[i]);
+        }
+        
+        return min;
+    }
+
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
