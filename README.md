@@ -63,6 +63,83 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
     
 - 检查链表中的循环
 - 返回链表中倒数第N个节点
+
+输入一个链表，输出该链表中倒数第k个结点。(剑指offer)
+第一种解法：
+    import java.util.*;
+    public class Solution {
+    public ListNode FindKthToTail(ListNode head,int k) {
+        
+        Stack<ListNode> stack = new Stack<ListNode>();
+        if(head == null || k < 1){
+            return null;
+        }
+    
+        while(head != null){
+            stack.push(head);
+            head = head.next;
+        }
+        for(int i=0;i<k-1;i++){
+            stack.pop();
+        }
+        if(stack.isEmpty()){
+            return null;
+        }
+      return stack.pop();
+    }
+    }
+第二种解法：效率高
+
+    class Solution {
+    public:
+    ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
+    
+    ListNode* temp = pListHead;
+    int count = 0;
+    if(pListHead == NULL){
+    return NULL;
+    }
+    while(temp != NULL){
+    count++;
+    temp = temp->next;
+    }
+    if(count < k){
+    return NULL;
+    }
+    ListNode* res = pListHead;
+    for(int i=0;i<count - k;i++){
+    res = res->next;
+    }
+    return res;
+       
+    }
+    };
+第三种解法：按道理说第三种解法效果应该最好，但是实际运行却不是
+    public class Solution {
+    public ListNode FindKthToTail(ListNode head,int k) {
+    
+    ListNode temp = head;
+    if(head == null || k < 1){
+    return null;
+    }
+    for(int i=0;i<k-1;i++){
+    if(temp == null){
+    return null;
+    }
+    temp = temp.next;
+    }
+    if(temp == null){
+    return null;
+    }
+       
+    while(temp.next != null){
+    temp = temp.next;
+    head = head.next;
+    }
+    return head;
+    }
+    }
+
 - 删除链表中的重复项
 
 # 栈 #
