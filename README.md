@@ -144,6 +144,36 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
 
 - **4.删除链表中的重复项**
 
+-**5合并两个排序的链表**
+
+**输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。**
+
+
+    public class Solution {
+    public ListNode Merge(ListNode list1,ListNode list2) {
+        ListNode list3 = null;//新建一个结点用于保存合并的链表
+        //递归停止条件
+        if(list1 == null || list2 == null){
+            if(list1 == null){
+                return list2;
+            }
+            else if(list2 == null){
+                return list1;
+            }else{
+                return null;
+            }
+        }
+        if(list1.val < list2.val){
+            list3 = list1;//依次保存较小的结点
+            list3.next = Merge(list1.next,list2);递归遍历链表
+        }else{
+            list3 = list2;//依次保存较小的结点
+            list3.next = Merge(list1,list2.next);
+        }
+        return list3;        
+    }
+    }
+
 # 栈 #
 LIFO(后进先出)
 ## 栈的基本操作 ##
@@ -196,35 +226,7 @@ FIFO(先进先出)
        return stack2.pop()；
     }
     }
--**5合并两个排序的链表**
 
-**输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。**
-
-
-    public class Solution {
-    public ListNode Merge(ListNode list1,ListNode list2) {
-        ListNode list3 = null;//新建一个结点用于保存合并的链表
-        //递归停止条件
-        if(list1 == null || list2 == null){
-            if(list1 == null){
-                return list2;
-            }
-            else if(list2 == null){
-                return list1;
-            }else{
-                return null;
-            }
-        }
-        if(list1.val < list2.val){
-            list3 = list1;//依次保存较小的结点
-            list3.next = Merge(list1.next,list2);递归遍历链表
-        }else{
-            list3 = list2;//依次保存较小的结点
-            list3.next = Merge(list1,list2.next);
-        }
-        return list3;        
-    }
-    }
     
 # 树 #
 树形结构是一种层次式的数据结构，由顶点和边组成，但不存在回路
