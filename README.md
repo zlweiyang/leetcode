@@ -39,9 +39,10 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
 - Search 从链表中返回指定元素
 - isEmpty 如果链表为空，则返回true
 ## 链表常见问题 ##
-- 反转链表
+- **1.反转链表**
 
-输入一个链表，反转链表后，输出新链表的表头（剑指offer）
+**输入一个链表，反转链表后，输出新链表的表头（剑指offer）
+**
 
     class Solution {
     public:
@@ -61,11 +62,12 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
     }
     };
     
-- 检查链表中的循环
-- 返回链表中倒数第N个节点
+- 2.检查链表中的循环
+- **3.返回链表中倒数第N个节点**
 
-输入一个链表，输出该链表中倒数第k个结点。(剑指offer)
-第一种解法：
+**输入一个链表，输出该链表中倒数第k个结点。(剑指offer)
+第一种解法：**
+
     import java.util.*;
     public class Solution {
     public ListNode FindKthToTail(ListNode head,int k) {
@@ -140,7 +142,7 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
     }
     }
 
-- 删除链表中的重复项
+- **4.删除链表中的重复项**
 
 # 栈 #
 LIFO(后进先出)
@@ -162,10 +164,68 @@ FIFO(先进先出)
 - isEmpty 如果队列为空则返回true
 - Top 返回队列第一个元素
 ## 队列常见问题 ##
-- 使用队列表示栈
-- 对队列的前K个元素倒序
-- 使用队列生成1~n的二进制数
+- 1.使用队列表示栈
+- 2.对队列的前K个元素倒序
+- 3.使用队列生成1~n的二进制数
+- **4.用两个栈实现队列**
 
+**用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。**
+
+    import java.util.Stack;
+
+    public class Solution {
+    Stack<Integer> stack1 = new Stack<Integer>();
+    Stack<Integer> stack2 = new Stack<Integer>();
+    
+    //基本思想是stack1始终存储倒序队列，stack2则通过栈的pop进行反转
+    public void push(int node) {
+         //在stack1入栈时，必须将stack2中的元素全部返回stack1，保证所有元素倒序存储在stack1中
+         while(!stack2.empty()){
+           stack1.push(stack2.pop());
+        }
+        stack1.push(node);//stack1新元素入栈
+        //stack2.push(stack1.pop());
+    }
+    
+    public int pop() {
+        //将stack1中所有元素反转存入Stack2中，那么stack2中的元素就是正序的
+        while(!stack1.empty()){
+        stack2.push(stack1.pop());
+        }
+        //返回stack2的栈顶元素即为队列的队头
+       return stack2.pop()；
+    }
+    }
+-**5合并两个排序的链表**
+
+**输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。**
+
+
+    public class Solution {
+    public ListNode Merge(ListNode list1,ListNode list2) {
+        ListNode list3 = null;//新建一个结点用于保存合并的链表
+        //递归停止条件
+        if(list1 == null || list2 == null){
+            if(list1 == null){
+                return list2;
+            }
+            else if(list2 == null){
+                return list1;
+            }else{
+                return null;
+            }
+        }
+        if(list1.val < list2.val){
+            list3 = list1;//依次保存较小的结点
+            list3.next = Merge(list1.next,list2);递归遍历链表
+        }else{
+            list3 = list2;//依次保存较小的结点
+            list3.next = Merge(list1,list2.next);
+        }
+        return list3;        
+    }
+    }
+    
 # 树 #
 树形结构是一种层次式的数据结构，由顶点和边组成，但不存在回路
 
