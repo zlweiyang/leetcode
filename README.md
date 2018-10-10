@@ -182,9 +182,51 @@ LIFO(后进先出)
 - isEmpty 若栈为空，则返回true
 - Top 返回顶部元素，但并不移除
 ## 栈常见问题 ##
-- 使用栈计算后缀表达式
-- 对栈元素进行排序
-- 判断表达式是否括号平衡
+- 1.使用栈计算后缀表达式
+- 2.对栈元素进行排序
+- 3.判断表达式是否括号平衡
+- **4.包含min函数的栈**
+
+**定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。（剑指offer）**
+
+    import java.util.Stack;
+    
+    public class Solution {
+    
+    Stack<Integer> stack = new Stack<Integer>();//先将元素存入栈中
+    Stack<Integer> stack2 = new Stack<Integer>();//在将stack中的元素一次pop出进行比较后，存入stack2，然后再将stack2的元素存入stack
+    public void push(int node) {
+        stack.push(node);
+    }
+    
+    public void pop() {
+        if(!stack.empty()){
+           stack.pop();
+        }
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int min() {
+        int min = Integer.MAX_VALUE;//默认最小值
+        while(!stack.empty()){
+            int temp = stack.pop();
+            if(temp<min){
+                min = temp;//始终保存最小值
+            }
+            stack2.push(temp);//将pop出的值存入stack2
+        }
+        while(!stack2.empty())
+        {
+            stack.push(stack2.pop());//将所有的元素重新存入stack
+        }        
+        return min;
+    }
+
+
+    }
 
 # 队列 #
 FIFO(先进先出)
