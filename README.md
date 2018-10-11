@@ -62,7 +62,29 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
     }
     };
     
-- 2.检查链表中的循环
+-** 2.检查链表中的循环**
+**给定一个链表，判断链表中是否有环**
+总体思路就是快指针总能超过慢指针
+    public class Solution {
+    public boolean hasCycle(ListNode head) {
+        
+        if(head == null || head.next == null){
+            return false;
+        }
+        ListNode fast,slow;
+        fast = head;
+        slow = head;
+        while(fast!=null && fast.next!=null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                return true;
+            }
+        }
+        return false;
+    }
+    }
+
 - **3.返回链表中倒数第N个节点**
 
 **输入一个链表，输出该链表中倒数第k个结点。(剑指offer)
