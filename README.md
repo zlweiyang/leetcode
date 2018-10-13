@@ -249,6 +249,35 @@ LIFO(后进先出)
 
 
     }
+**-5 栈的压入和弹出**
+
+输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
+
+    import java.util.ArrayList;
+    import java.util.Stack;
+    public class Solution {
+    public boolean IsPopOrder(int [] pushA,int [] popA) {
+        if(pushA.length == 0 || popA.length == 0 || pushA.length != popA.length){
+            //判断边界条件
+            return false;
+        }
+      Stack<Integer> stack = new Stack<Integer>();//建立一个辅助栈用于压入pushA，以及操作pushA的pop
+      int pushindex = 0;
+      int popindex = 0;  
+      stack.push(pushA[pushindex]);//将第一个元素压入栈
+      while(popindex < popA.length){
+          while(stack.peek()!= popA[popindex]){//判断栈顶元素是否等于序列当前元素
+              if(pushindex == pushA.length-1){//，如果不等先判断是否所有元素已经压入stack中，如果压入则返回false
+                  return false;
+              }
+              stack.push(pushA[++pushindex]);//否则继续向栈中压入元素
+          }
+          stack.pop();//；如果栈顶元素与popA序列当前位置元素相等则弹出该元素
+          popindex++;//popA序列继续向后移动
+      }
+        return stack.empty();//
+    }
+    }
 
 # 队列 #
 FIFO(先进先出)
