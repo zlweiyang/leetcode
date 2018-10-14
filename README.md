@@ -28,7 +28,27 @@ Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自�
 - 找到数组中第一个不重复出现的整数
 - 合并两个有序数组
 - 重新排列数组中的正值和负值
+- **5.连续子数组的和**
 
+    import java.util.Arrays;
+    import java.lang.Math;
+    public class Solution {
+    public int FindGreatestSumOfSubArray(int[] array) {
+        int[] arr = new int[array.length];
+        for(int i=0;i<array.length;i++){
+            int sum = array[i];
+            int max = array[i];
+            for(int j=i+1;j<array.length;j++){
+                sum += array[j];
+                max = Math.max(max,sum);
+            }
+            arr[i] = max;
+        }
+        Arrays.sort(arr);
+        return arr[array.length - 1];
+    }
+    }
+    
 # 链表 #
 链表包括单链表、双向链表以及循环链表
 ## 链表的基本操作 ##
