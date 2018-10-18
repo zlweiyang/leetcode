@@ -347,17 +347,128 @@ FIFO(先进先出)
 ## 树形结构的主要类型包括 ##
 - N元树
 - 平衡树
+
+高度差小于1
+
 - 二叉树
 - 二叉搜索树
+
+左小右大。
+
 - AVL树
 - 红黑树
 - 2-3树
+- 哈夫曼树
+
+特点：1.没有度为1的结点，2.n个叶子结点的哈夫曼树共有2*n-1个结点。3.左右子树交换后依然是哈夫曼树。WPL相同的两可树为同构哈夫曼树。
 
 ## 树常见问题 ##
-- 求二叉树的高度
+-** 1.求二叉树的深度**
+**输入一棵二叉树，求该树的深度。从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。**
+
+    public class Solution {
+    public int TreeDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        int leftdepth = TreeDepth(root.left) ;//遍历左子树得到左子树的深度
+        int rightdepth = TreeDepth(root.right) ;//遍历右子树得到右子树
+        
+        return Math.max(leftdepth,rightdepth)+1;
+    }
+    }
+
+**- 2.树的子结构**
+
+输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）
+
+    public class Solution {
+    public boolean HasSubtree(TreeNode root1,TreeNode root2) {
+        //如果root1为空，root2为空时无子结构
+        if(root2 == null || root1 == null){
+            return false;
+        }
+        //设置标记，初始为false
+        boolean res = false;
+        //遍历root1指导root1.val==root2.val
+        //当root1.val==root2.val时继续遍历子树
+        if(root1.val == root2.val){
+            res = isSubTree(root1,root2);
+        }
+        //如果之前相结点不相等的，继续递归遍历root1的左右子树
+        if(!res){
+            res = HasSubtree(root1.left,root2);
+            if(!res){
+                res = HasSubtree(root1.right,root2);
+            }
+        }
+        return res;
+    }
+  //判断当找到root1.val == root2.val时，判断子树结点是否一一相等，知道root2为空
+    public boolean isSubTree(TreeNode root1,TreeNode root2){
+        
+        if(root2==null){
+            return true;
+        }
+        if(root1==null && root2!=null){
+            return false;
+        }
+        //递归遍历
+        if(root1.val == root2.val){
+            return isSubTree(root1.left,root2.left)&&isSubTree(root1.right,root2.right);
+        }else{
+            return false;
+        }
+    }
+    }
+**-3.镜像二叉树**
+    public class Solution {
+    public void Mirror(TreeNode root) {
+        if(root == null){
+            return ;
+        }
+         TreeNode temp;
+         temp = root.left;
+         root.left = root.right;
+         root.right = temp;
+         if(root.left != null){
+             Mirror(root.left);
+         }
+         if(root.right != null){
+             Mirror(root.right);
+         }
+    }
+    }
+    
 - 在二叉搜索树中查找第k个最大值
 - 查找与根节点距离K的节点
 - 在二叉树中查找给定节点的祖先节点
+- 
+**- 5.重建二叉树**
+
+输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+
+根据先序遍历的顺序查找中序遍历的元素，将树分治为左右子树，逐步递归。
+
+    public class Solution {
+    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+        return helper(pre,0,pre.length-1,in,0,in.length-1);
+    }
+    public TreeNode helper(int [] pre,int prestart ,int preend,int [] in,int instart,int inend){
+        
+        if(prestart > preend || instart > inend){
+            return null;//递归结束条件
+        }
+        TreeNode root = new TreeNode(pre[prestart]);
+        for(int i=instart;i<=inend;i++){
+            if(in[i] == pre[prestart]){
+            root.left = helper(pre,prestart+1,prestart+i-instart,in,instart,i-1);//左子树递归
+            root.right = helper(pre,prestart+i-instart+1,preend,in,i+1,inend);//右子树递归
+            }
+        }
+        return root;
+    }
+    }
 
 ## 堆 ##
 堆也称为优先队列，堆必须是完全二叉树。
