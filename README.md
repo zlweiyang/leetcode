@@ -352,6 +352,42 @@ FIFO(先进先出)
 
 - 二叉树
 - 二叉搜索树
+- 
+**二叉搜索树的后序遍历**
+**输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。**
+
+
+//二叉搜索树即左子树的结点总小于根节点，右子树的结点总大于根节点
+
+    public class Solution {
+    public boolean VerifySquenceOfBST(int [] sequence) {
+        if(sequence.length == 0){
+            return false;
+        }
+        return IsBST(sequence,0,sequence.length-1);
+    }
+    //基本思想有点类似分治，数组最后一位元素是根节点，将左边的数或者右边的数与根节点进行比较
+    public boolean IsBST(int[] sequence,int start,int end){
+        //当左右分段中有遍历结束时，递归结束，返回true
+        if(start >= end){
+            return true;
+        }
+        //从起始点开始查找比根节点大的元素
+        int i = start;
+        while(sequence[i]<sequence[end]){
+            i++;
+        }
+        //由于右子树都应该比根节点大，所以如果出现小于的根节点的数那么就不是二叉搜索树。
+        for(int j=i;j<end;j++){
+            if(sequence[j] < sequence[end]){
+                return false;
+            }
+        }
+        //递归遍历所有数据分左右两边进行分治，树的递归一般是二分递归。
+        return  IsBST(sequence,start,i-1)&&IsBST(sequence,i,end-1);
+        
+    }
+    }
 
 左小右大。
 
@@ -467,6 +503,36 @@ FIFO(先进先出)
             }
         }
         return root;
+    }
+    }
+-** 6从上往下打印二叉树(树的层次遍历，一半借用队列来实现)**
+**从上往下打印出二叉树的每个节点，同层节点从左至右打印。**
+
+    import java.util.ArrayList;
+    import java.util.LinkedList;
+    import java.util.Queue;
+    public class Solution {
+    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
+       ArrayList<Integer> res = new ArrayList<Integer>();
+       //树的层次遍历一般借助队列来实现，队列一般来存储上一层的结点，并以二分的形式实现树的遍历，其主要是队列中的结点即为下一层结点的root
+       Queue<TreeNode> queue = new LinkedList<TreeNode>();
+       if(root == null){
+           return res;
+       }
+       queue.offer(root);//保存第一层的root
+       while(!queue.isEmpty()){
+           TreeNode temp = queue.poll();//将本层的结点一一出队
+           res.add(temp.val);//打印按序出队的结点值
+           //以二分的形式遍历子树，因为由于队列的出队操作，使得根节点在不断变化，所以可以一直访问不同root的左右孩子，这种思想类似递归的思想
+           递归一般需要一个停止条件，但是这个题目中没有递归停止条件，认为的通过判断队列是否为空来判断，这种思想类似树的前序、中序、后序遍历的非递归实现方式。
+           if(temp.left != null){
+               queue.offer(temp.left);
+           }
+           if(temp.right != null){
+               queue.offer(temp.right);
+           }
+       }
+       return res;
     }
     }
 
