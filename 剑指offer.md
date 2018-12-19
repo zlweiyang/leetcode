@@ -572,6 +572,8 @@
 
     }
 
+
+
 ## 21.栈的压入、弹出序列 ##
 
 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
@@ -1895,4 +1897,49 @@ LL今天心情特别好,因为他去买了一副扑克牌,发现里面居然有2
 
 65 矩阵中的路径
 
-66 矩阵中的路径
+66 机器人的运动范围
+
+
+    public class Solution {
+    public int movingCount(int threshold, int rows, int cols)
+    {
+        if(threshold < 0 || rows < 1 ||cols < 1){
+            return 0;
+        }
+        boolean[] visited = new boolean[rows*cols];
+        for(int i=0;i<visited.length;i++){
+            visited[i]=false;
+        }
+        //返回格子数
+        return getmovingCount(threshold,rows,cols,0,0,visited);
+    }
+    
+    public int getmovingCount(int threshold,int rows,int cols,int row,int col,boolean[] visited){
+        int count = 0;
+        //对于凡是可以访问的格子数进行累加
+        if(isCanVisited(threshold,rows,cols,row,col,visited)){
+            visited[row*cols+col] = true;
+            count = 1+getmovingCount(threshold,rows,cols,row-1,col,visited)//上
+                +getmovingCount(threshold,rows,cols,row,col-1,visited)//左
+                +getmovingCount(threshold,rows,cols,row+1,col,visited)//下
+                +getmovingCount(threshold,rows,cols,row,col+1,visited);//右
+        }
+        
+        return count;
+    }
+    //判断能否访问
+    public boolean isCanVisited(int threshold,int rows,int cols,int row,int col,boolean[] visited){
+        return (rows>row && row>=0 && col>=0 && cols>col  && !visited[row*cols+col] &&(getNum(row) + getNum(col) <= threshold));
+    }
+    //计算数值
+    public int getNum(int num){
+        int sum = 0;
+        while(num != 0){
+            sum += (num%10);
+            num = num/10;
+        }
+        return sum;
+    }
+
+
+    }
