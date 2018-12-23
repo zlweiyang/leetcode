@@ -549,5 +549,70 @@ N个顶点，E条边的时间复杂度：**1.用邻接表存储图，有O(N+E)2.
 
 ## 动态规划与贪心之间的关系 ##
 
-# 递归 #
+# 递归与回溯 #
+
+树形问题
+
+17. Letter Combinations of a Phone Number
+
+digits是数字字符串
+
+s(digits)是digits所能代表的字母字符串
+
+递归调用：
+
+s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
+=letter(digits[0]) + letter(digits[1]) + s(digits[2...n-1])=...。
+
+<div align="center"> <img src="leetcode17.png" width="450"/> </div><br>
+
+
+递归调用结束时，需要进行回溯。
+
+假设数字长度为n，时间复杂度为O(3^n)。
+
+93. Restore IP Addresses
+
+131. Palindrome Partitioning    
+
+## 回溯算法的应用 ##
+
+### 1.排列问题
+
+46. Permutations
+
+<div align="center"> <img src="leetcode46.png" width="450"/> </div><br>
+
+递推公式：Perms(nums[0...n-1])={取出一个数字} + Perms(nums[{0...n-1}-这个数字])
+
+47. Permutations II  
+
+###组合问题
+
+77 Combinations  
+
+<div align="center"> <img src="leetcode77.png" width="450"/> </div><br>
+
+回溯法剪枝：不需要取4。
+
+39. Combination Sum
+
+40. Combination Sum II
+
+216. Combination Sum III
+
+78. Subsets
+
+90. Subsets II
+
+401. Binary Watch
+
+### 二维平面上使用回溯法
+
+79 Word Search
+
+### floodfill算法(其实质是深度优先遍历)
+
+200. Number of Islands
+
 # 海量数据案例 #
