@@ -590,6 +590,8 @@ N个顶点，E条边的时间复杂度：**1.用邻接表存储图，有O(N+E)2.
 
 # 十四、递归与回溯 #
 
+递归的两个条件：1.递归终止条件 2.递归过程。
+
 树形问题
 
 17. Letter Combinations of a Phone Number
@@ -609,6 +611,86 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
 递归调用结束时，需要进行回溯。
 
 假设数字长度为n，时间复杂度为O(3^n)。
+
+
+111. 二叉树的最小深度
+
+	class Solution {
+    public int minDepth(TreeNode root) {
+        
+        if(root == null){
+            return 0;
+        }
+        if(root.left == null && root.right == null){
+            return 1;//关键找到最后左右孩子都为空
+        }
+        int left_depth=0;
+        int right_depth=0;
+        if(root.left != null){
+            left_depth = minDepth(root.left);
+        }else{
+            left_depth =  Integer.MAX_VALUE;//最大值的应用，如果只有左孩子或者右孩子为空，不能表示最小深度
+        }
+        if(root.right != null){
+            right_depth = minDepth(root.right);
+        }else{
+            right_depth = Integer.MAX_VALUE;
+        }
+        
+        return Math.min(left_depth,right_depth)+1;
+    }
+	}
+
+222. 完全二叉树的节点个数
+
+    public class CountCompleteTreeNodes222 {
+
+    public int countNodes(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+
+        TreeNode left = root;
+        TreeNode right = root;
+
+        int height = 0;
+        while(right != null){
+            left = left.left;
+            right=right.right;
+            height++;
+        }
+
+        if(left == null){
+            return (1<<height)-1;//满二叉树
+        }else{
+            return 1+countNodes(root.left)+countNodes(root.right);
+        }
+    }
+    }
+
+110. 平衡二叉树
+
+    class Solution {
+    public boolean isBalanced(TreeNode root) {
+        
+        if(root == null){
+            return true;
+        }
+        if(Math.abs(getDepth(root.left) - getDepth(root.right)) > 1){
+            return false;
+        }
+        return isBalanced(root.left)&&isBalanced(root.right);//要递归遍历所有结点的左右节点深度差
+    }
+    
+    public int getDepth(TreeNode root){
+        //int depth = 0;
+        if(root == null){
+            return 0;
+        }
+        
+        return Math.max(getDepth(root.left),getDepth(root.right))+1;
+    }
+    }
 
 93. Restore IP Addresses
 

@@ -22,9 +22,12 @@ class Solution {
 
         }
     public static void main(String[] args) {
-        Solution s = new Solution();
-        //System.out.println(s.("{[]}"));
-        int[] nums = {0,1,2,1,2,0};
-        s.sortColors(nums);
+//        Solution s = new Solution();
+//        //System.out.println(s.("{[]}"));
+//        int[] nums = {0,1,2,1,2,0};
+//        s.sortColors(nums);
+
+        int demo = 4;
+        System.out.println(0<<1);
     }
 }

@@ -1,6 +1,5 @@
 package com.zl.CVTE;
 
-import com.zl.Solution;
 
 /**
  * @author zlCalma
