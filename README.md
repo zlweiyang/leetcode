@@ -692,6 +692,95 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
     }
     }
 
+257. 二叉树的所有路径
+    public class BinaryTreePaths257 {
+    public List<String> binaryTreePaths(TreeNode root) {
+
+        List<String> res = new ArrayList<>();
+
+        if(root == null){
+            return res;
+        }
+        if(root.left == null && root.right == null){
+            res.add(String.valueOf(root.val));
+            return res;
+        }
+
+        //上面是递归终止条件，下面写递归过程
+        List<String> lefts = binaryTreePaths(root.left);
+        for(String s:lefts){
+            res.add(String.valueOf(root.val)+"->"+s);
+        }
+        List<String> rights = binaryTreePaths(root.right);
+        for(String s:rights){
+            res.add(String.valueOf(root.val)+"->"+s);
+        }
+
+        return res;
+    }
+    }
+
+113. 路径总和 II
+
+     public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        //List<Integer> temp = new ArrayList<>();
+        helper(root,sum,res,new ArrayList<>());
+        return res;    
+    }
+    public void helper(TreeNode root,int sum,List<List<Integer>> res,List<Integer> temp){
+        if(root == null){
+            return; 
+        }
+        //List<Integer> temp = new ArrayList<>();
+        if(root.left == null && root.right == null && sum==root.val){
+            temp.add(root.val);
+            res.add(temp);
+            return;
+            
+        }
+        //上述为递归终止条件
+        temp.add(root.val);
+        if(root.left != null){
+            //temp.add(root.val);
+            List<Integer> list = new ArrayList<Integer>(temp);
+            helper(root.left,sum-root.val,res,list);
+        }
+        if(root.right != null){
+            //temp.add(root.val);
+            List<Integer> list = new ArrayList<Integer>(temp);
+            helper(root.right,sum-root.val,res,list);
+        }
+    }
+
+
+129. 求根到叶子节点数字之和
+
+    class Solution {
+    int sum = 0;
+    public int sumNumbers(TreeNode root) {     
+        helper(root);
+        return sum;
+    } 
+    public void helper(TreeNode root){
+        if(root == null){
+            return;
+        }
+        if(root.left==null&&root.right==null){
+            sum += root.val;
+        }
+        if(root.left != null){
+            root.left.val += root.val*10 ;
+            helper(root.left);
+        }
+        if(root.right != null){
+            root.right.val += root.val*10;
+            helper(root.right);
+        }
+    }
+    }
+
 93. Restore IP Addresses
 
 131. Palindrome Partitioning    
