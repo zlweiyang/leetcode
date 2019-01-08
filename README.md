@@ -123,8 +123,82 @@ FIFO(先进先出)
 高度差小于1
 
 - 二叉树
-- 二叉搜索树
-- AVL树
+### 二叉搜索树
+
+235. 二叉搜索树的最近公共祖先
+
+    public class LowestCommonAncestorofaBinarySearchTree235 {
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+
+        if(root == null || root == p|| root == q){
+            return root;
+        }
+
+        //如果p、q在二叉搜索树的两边，那么root就是他们的公共祖先
+        if(((root.val > p.val)&&(root.val < q.val))||((root.val < p.val)&&(root.val > q.val))){
+            return root;
+        }
+        //如果p，q在root的左边则递归调用左子树
+        if((root.val > p.val)&&(root.val > q.val)){
+            return lowestCommonAncestor(root.left,p,q);
+        }else{
+            //否则调用右子树
+            return lowestCommonAncestor(root.right,p,q);
+        }
+
+    }
+    }
+
+98. 验证二叉搜索树
+
+    class Solution {
+    public boolean isValidBST(TreeNode root) {
+        
+        return helper(root,null,null);
+    }
+    
+    public boolean helper(TreeNode root,TreeNode left,TreeNode right){
+        if(root == null){
+            return true;
+        }
+        if(left != null && left.val <= root.val){
+            return false;
+        }
+        if(right !=null&& right.val >= root.val){
+            return false;
+        }
+        //不断递归左右子树
+        return helper(root.left,root,right)&&helper(root.right,left,root);
+    }
+    }
+### AVL树
+
+110. 平衡二叉树
+
+    class Solution {
+    public boolean isBalanced(TreeNode root) {
+        
+        if(root == null){
+            return true;
+        }
+        if(Math.abs(getDepth(root.left) - getDepth(root.right)) > 1){
+            return false;
+        }
+        return isBalanced(root.left)&&isBalanced(root.right);//要递归遍历所有结点的左右节点深度差
+    }
+    
+    public int getDepth(TreeNode root){
+        //int depth = 0;
+        if(root == null){
+            return 0;
+        }
+        
+        return Math.max(getDepth(root.left),getDepth(root.right))+1;
+    }
+    }
+
 - B树
 
 平衡多路搜索树，批量访问。所谓m阶B树，即多路平衡二叉搜索树(m>=2)。
@@ -668,29 +742,7 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
     }
     }
 
-110. 平衡二叉树
 
-    class Solution {
-    public boolean isBalanced(TreeNode root) {
-        
-        if(root == null){
-            return true;
-        }
-        if(Math.abs(getDepth(root.left) - getDepth(root.right)) > 1){
-            return false;
-        }
-        return isBalanced(root.left)&&isBalanced(root.right);//要递归遍历所有结点的左右节点深度差
-    }
-    
-    public int getDepth(TreeNode root){
-        //int depth = 0;
-        if(root == null){
-            return 0;
-        }
-        
-        return Math.max(getDepth(root.left),getDepth(root.right))+1;
-    }
-    }
 
 257. 二叉树的所有路径
     public class BinaryTreePaths257 {
@@ -778,6 +830,49 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
             root.right.val += root.val*10;
             helper(root.right);
         }
+    }
+    }
+
+437. 路径总和 III
+
+    class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        if(root == null){
+            return 0;
+        }
+        //分三种情况：
+        //1.root在路径中：helper(root,sum)
+        //2.root不在路径中，在左子树中：pathSum(root.left,sum)
+        //3.root不在路径中，在右子树中：parhSum(root.right,sum)
+        return pathSum(root.left,sum)+pathSum(root.right,sum)+helper(root,sum);
+    }
+    
+    public int helper(TreeNode root,int sum){
+        if(root == null){
+            return 0;
+        }
+        
+        return (root.val == sum? 1:0)+helper(root.left,sum-root.val)+helper(root.right,sum-root.val);
+    }
+    }
+
+236. 二叉树的最近公共祖先
+
+    class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        
+        if(root == null || p==root||q==root){
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right = lowestCommonAncestor(root.right,p,q);
+        //说明p，q在左右两边
+        if(left != null && right!= null){
+            return root;
+        }else{
+           return left != null? left:right;
+        }
+        
     }
     }
 
