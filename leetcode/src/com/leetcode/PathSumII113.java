@@ -12,9 +12,13 @@ public class PathSumII113 {
 
         List<List<Integer>> res = new ArrayList<>();
         //List<Integer> temp = new ArrayList<>();
-        helper(root,sum,res,new ArrayList<>());
+        helper(root,sum, new ArrayList<>(), res);
         return res;
     }
+
+    private void helper(TreeNode root, int sum, ArrayList<Object> objects, List<List<Integer>> res) {
+    }
+
     public void helper(TreeNode root,int sum,List<List<Integer>> res,List<Integer> temp){
         if(root == null){
             return;

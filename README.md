@@ -15,9 +15,13 @@
 增加一个文件夹leetcode，用于记录数据结构与算法相关的完成代码。主要分为Array，链表，栈，队列，二叉树，图，排序，递归，贪心，分治，动态规划，回溯。
 
 # 一、数组 #
-数组是一种线性表数据结构，用一组**连续的内存空间**来存储一组具有**相同类型**的数据。其最大特点是支持随机访问，但删除，插入操作低效。
+数组是一种**线性表数据结构**，用一组**连续的内存空间**来存储一组具有**相同类型**的数据。其最大特点是**支持随机访问**，但删除，插入操作低效。
 数组在定义时需要预先指定大小，因为需要分配连续的内存空间。
 Java中的ArrayList支持动态扩容，当存储空间不够时，其空间自动扩容为1.5倍大小。
+
+数组和链表的区别？
+
+数组按照下标访问时，其时间复杂度是O(1),插入元素的时间复杂度是O(n),链表适合插入和删除数据，时间复杂度为O(1)。
 ## 数组的基本操作 ##
 - Insert--在指定索引插入一个元素
 - Get--返回指定索引的元素
@@ -83,7 +87,41 @@ leetcode 76. Minimum Window Substring
 
 # 三、查找表 #
 
+map+set
 
+350. 两个数组的交集 II
+
+242. 有效的字母异位词
+
+202. 快乐数
+
+290. 单词模式
+
+205. 同构字符串
+
+451. 根据字符出现频率排序
+
+1. 两数之和
+
+15. 三数之和
+
+16. 最接近的三数之和
+
+454. 四数相加 II
+
+18. 四数之和
+
+49. 字母异位词分组
+
+447. 回旋镖的数量
+
+## 滑动窗口+查找表
+
+219. 存在重复元素 II
+
+217. 存在重复元素
+
+220. 存在重复元素 III
 
 # 四、栈 #
 LIFO(后进先出)
@@ -173,7 +211,100 @@ FIFO(先进先出)
         return helper(root.left,root,right)&&helper(root.right,left,root);
     }
     }
-### AVL树
+
+108. 将有序数组转换为二叉搜索树
+
+按照根左右二分之。
+
+     public class ConvertSortedArraytoBinarySearchTree108 {
+    public TreeNode sortedArrayToBST(int[] nums) {
+
+        return CreateTree(nums,0,nums.length-1);
+
+    }
+
+    TreeNode CreateTree(int[] nums,int l,int r ){
+        if(l>r) return null;
+        int mid = (l+r+1)/2;
+        TreeNode node = new TreeNode(0);
+
+        node.val = nums[mid];
+        node.left = CreateTree(nums,l,mid-1);
+        node.right = CreateTree(nums,mid+1,r);
+        return node;
+    }
+    }
+
+450. 删除二叉搜索树中的节点
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        
+        
+        if(root == null){
+            return null;
+        }
+        
+        if(root.val == key){
+            if(root.left == null){
+                return root.right;
+            }
+            if(root.right == null){
+                return root.left;
+            }
+            
+            TreeNode node = root.right;
+            while(node.left!=null){
+                node = node.left;
+            }
+            node.left = root.left;
+            return root.right;
+        }
+        
+        else if(root.val < key){
+            TreeNode  node = deleteNode(root.right,key);
+            root.right = node;
+            return root;
+        }else{
+            TreeNode node = deleteNode(root.left,key);
+            root.left = node;
+            return root;
+        }
+        
+    }
+    }
+
+230. 二叉搜索树中第K小的元素
+
+*
+ * 中序遍历
+ */
+    public class KthSmallestElementinaBST {
+
+    int index=0;
+
+    public int kthSmallest(TreeNode root, int k) {
+
+
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+
+        res = kthSmallest(root.left,k);
+        if(index == k){
+            return res;
+        }
+        if(++index == k){
+            return root.val;
+        }
+        res = kthSmallest(root.right,k);
+
+        return res;
+
+    }
+    }
+
+### 平衡二叉树
 
 110. 平衡二叉树
 
@@ -199,12 +330,34 @@ FIFO(先进先出)
     }
     }
 
-- B树
+
+
+### B树
 
 平衡多路搜索树，批量访问。所谓m阶B树，即多路平衡二叉搜索树(m>=2)。
 外部节点的深度统一相等，所有叶节点的深度统一相等。
 
-## 红黑树 ##
+**规则：**
+
+1. 排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则。
+2. 子节点数：非叶子节点数>1,且<=M。(M阶代表一个树节点最多有多少个查找路径，M>=2,M=M路，当M=2则是二叉树，M=3则是三叉树)。
+3. 关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)。
+4. 所有叶子节点均在同一层、叶子节点除了包含关键字和关键字记录的指针外也有指向其子节点的指针，只不过其指针地址都为null对应下图最后一层节点的空格子。
+5. 有j个孩子的非页节点恰好有j-1个关键码，关键码按递增次序排列。
+
+
+### B+树
+
+在B+树中，所有记录节点都是按键值大小顺序存放在同一层的叶子节点上，由各叶子节点指针进行连接。
+
+**规则**：
+1. B+树跟B树不同的是B+树的非叶子节点不保存关键字记录的指针，只进行数据索引，这样使得B+树每个非叶子节点所能保存的关键字大大增加。
+2. B+树叶子节点保存了父节点的所有关键字记录的指针，所有数据地址必须要用到叶子节点才能获取到。所以每次数据查询的次数都一样。
+3. B+树叶子节点的关键字从小到大有序排列，左边结尾数据都会保存右边节点开始数据的指针。
+4. 非叶子节点的子节点数=关键字数，也可以说非叶子节点数=关键数-1。
+
+
+### 红黑树 ##
 
 - 1.树根必为黑色，
 - 2.外部节点(空的叶节点)均为黑色，
@@ -215,7 +368,8 @@ FIFO(先进先出)
 
 性质：黑平衡二叉树(绝对平衡)，不是平衡二叉树，最大高度(2lgn),O(lgn)。
 
-## 2-3树 ##
+### 2-3树 ##
+
 - 满足二分搜索树的基本性质
 - 节点可以存放一个元素或者两个元素
 - 可以存放两个孩子也可以存放三个孩子
@@ -875,6 +1029,9 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
         
     }
     }
+
+
+
 
 93. Restore IP Addresses
 
