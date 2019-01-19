@@ -21,7 +21,7 @@ public class Sort {
 
     public static void main(String[] args) {
 
-        int[] array = {1, 3, 2, 5, 7, 8, 6, 4};
+        int[] array = {1,3,2,5,7,8,6,4};
         int[] arr= {2,5,3,0,2,3,0,3};
         //System.out.println(Arrays.toString(array));
         System.out.println(Arrays.toString(arr));
@@ -37,9 +37,10 @@ public class Sort {
         //Sort.shellSort(array);
         //Sort.mergeSort(array);
         //Sort.quickSort(array);
-        Sort.countingSort(arr);
+        //Sort.countingSort(arr);
+        Sort.heapSort(array);
         //System.out.println(Arrays.toString(array));
-        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(array));
     }
 
     //冒泡排序
@@ -256,7 +257,46 @@ public class Sort {
         }
     }
 
-    //桶排序
+    //堆排序(最大堆)
+
+    public static void heapSort(int[] arr){
+
+        //将数组构建为大顶堆
+        for(int i= arr.length/2-1;i>=0;i--){
+
+            //从第一个非叶子节点开始调整
+            adjustHeap(arr,i,arr.length);
+        }
+        //交换堆顶元素并调整对结构
+        for(int i=arr.length-1;i>0;i--){
+            swap(arr,0,i);//最大元素始终在下标为0处。
+            adjustHeap(arr,0,i);
+        }
+    }
+
+    /**
+     *
+     * @param arr
+     * @param i
+     * @param length
+     */
+    public static void adjustHeap(int [] arr,int i,int length){
+
+        int temp = arr[i];//先取出当前元素
+        for(int k = i*2+1;k<length;k = k*2+1){//从i节点的左子节点开始
+            if(k+1<length && arr[k]<arr[k+1]){
+                k++;
+            }
+            if(arr[k] > temp){//如果子节点大于父节点
+                arr[i] = arr[k];//子节点直接赋值给父节点
+                i = k;//父节点的索引变为子节点的索引
+            }else{
+                break;
+            }
+        }
+        arr[i] = temp;//将元素放到最终的位置
+
+    }
 
 
 }

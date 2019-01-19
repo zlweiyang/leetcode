@@ -412,8 +412,86 @@ FIFO(先进先出)
 - IsEmpty 判断最大堆H是否为空
 - DeleteMax 返回最大元素
 
-## 字典树 ##
+## Trie、字典树、前缀树 ##
 字典树，也称为前缀树，对于解决字符串问题非常有效。
+
+leetcode 208实现 Trie (前缀树)
+
+	class Trie {
+	    
+	    private class Node{
+	        
+	        private boolean isWord;
+	        private TreeMap<Character,Node> next;
+	        
+	        public Node (boolean isWord){
+	            this.isWord  = isWord;
+	            next = new TreeMap<>();
+	        }
+	        
+	        public Node(){
+	            this(false);
+	        }
+	    } 
+	    
+	    private Node root;
+	    private int size;
+	
+	    /** Initialize your data structure here. */
+	    public Trie() {
+	        root = new Node();
+	        size =  0 ;
+	    }
+	    
+	    /** Inserts a word into the trie. */
+	    public void insert(String word) {
+	        if(word == null){
+	            return;
+	        }
+	        
+	        Node cur = root;
+	        for(int i=0;i<word.length();i++){
+	            char c = word.charAt(i);
+	            if(cur.next.get(c) == null){
+	                cur.next.put(c,new Node());
+	            }
+	            cur = cur.next.get(c);
+	        }
+	        if(!cur.isWord){
+	            cur.isWord = true;
+	            size++;
+	        }
+	    }
+	    
+	    /** Returns if the word is in the trie. */
+	    public boolean search(String word) {
+	        Node cur = root;
+	        for(int i=0;i<word.length();i++){
+	            char c = word.charAt(i);
+	            if(cur.next.get(c) == null){
+	                return false;
+	            }
+	            cur = cur.next.get(c);
+	        }
+	        return cur.isWord;
+	        
+	    }
+	    
+	    /** Returns if there is any word in the trie that starts with the given prefix. */
+	    public boolean startsWith(String prefix) {
+	        Node cur = root;
+	        for(int i=0;i<prefix.length();i++){
+	            char c = prefix.charAt(i);
+	            if(cur.next.get(c) == null){
+	                return false;
+	            }
+	            cur = cur.next.get(c);
+	        }
+	        return true;
+	    }
+	}
+
+
 ## 字典树常见问题 ##
 - 计算字典树中的总单词树
 - 打印存储在字典树中的所有单词
@@ -797,7 +875,52 @@ N个顶点，E条边的时间复杂度：**1.用邻接表存储图，有O(N+E)2.
 - 将堆的尺寸减小1，并调用向下调整函数。
 - 重复步骤2.
 
+堆是具有以下性质的完全二叉树：每个节点的值都大于等于(或者小于等于)其左右孩子
+
 <div align="center"> <img src="heap.gif" width="450"/> </div><br>
+
+ //堆排序(最大堆)
+
+    public static void heapSort(int[] arr){
+
+        //将数组构建为大顶堆
+        for(int i= arr.length/2-1;i>=0;i--){
+
+            //从第一个非叶子节点开始调整
+            adjustHeap(arr,i,arr.length);
+        }
+        //交换堆顶元素并调整对结构
+        for(int i=arr.length-1;i>0;i--){
+            swap(arr,0,i);//最大元素始终在下标为0处。
+            adjustHeap(arr,0,i);
+        }
+    }
+
+    /**
+     *
+     * @param arr
+     * @param i
+     * @param length
+     * 通过下标转换，不需要交换
+     */
+    public static void adjustHeap(int [] arr,int i,int length){
+
+        int temp = arr[i];//先取出当前元素
+        for(int k = i*2+1;k<length;k = k*2+1){//从i节点的左子节点开始
+            if(k+1<length && arr[k]<arr[k+1]){
+                k++;
+            }
+            if(arr[k] > temp){//如果子节点大于父节点
+                arr[i] = arr[k];//子节点直接赋值给父节点
+                i = k;//父节点的索引变为子节点的索引
+            }else{
+                break;
+            }
+        }
+        arr[i] = temp;//将元素放到最终的位置
+
+    }
+
 
 # 十、字符串 #
 

@@ -6,9 +6,13 @@ public class HeapSort {
         MaxHeap h = new MaxHeap();
         h.init(arr);
         for(int i = 0;i<arr.length;i++) {
+            //System.out.println(arr[i]);
             h.remove();
         }
         System.arraycopy(h.queue, 1, arr, 0, arr.length);;
+        for(int i=0;i<h.queue.length;i++){
+            System.out.println(h.queue[i]);
+        }
     }
 
     private static class MaxHeap{
@@ -55,6 +59,11 @@ public class HeapSort {
                 k = j;
             }
         }
+    }
+
+    public static void main(String[] args) {
+        int [] arr = {2,3,5,1,7,9};
+        HeapSort.sort(arr);
     }
 
 }
