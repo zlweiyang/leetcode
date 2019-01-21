@@ -11,6 +11,8 @@
 - 小数据量调试
 - 大数据量的测试
 
+## 时间复杂度分析与空间复杂度分析
+
 
 增加一个文件夹leetcode，用于记录数据结构与算法相关的完成代码。主要分为Array，链表，栈，队列，二叉树，图，排序，递归，贪心，分治，动态规划，回溯。
 
@@ -56,8 +58,53 @@ leetcode 345. Reverse Vowels of a String
 
 leetcode 11. Container With Most Water
 
+34. 在排序数组中查找元素的第一个和最后一个位置
+
 
 ## 双索引技术 ##
+
+15. 三数之和
+
+	    class Solution {
+
+	    public List<List<Integer>> threeSum(int[] nums) {
+	        List<List<Integer>> res = new ArrayList<>();
+	        Arrays.sort(nums);
+	        for(int i=0;i<=nums.length-2;i++){ 
+
+	            if(i>0 && nums[i]==nums[i-1]){
+	                continue;
+	            }
+	            //设置双指针
+	            int left = i+1;
+	            int right = nums.length-1;
+	            while(left<right){
+	                if(nums[i] + nums[left] +nums[right] < 0){
+	                    left++;
+	                }
+	                else if(nums[i] + nums[left] +nums[right] > 0){
+	                    right--;
+	                }
+	                else{
+	                    res.add(Arrays.asList(nums[i],nums[left],nums[right]));
+	                    //防止相等元素，导致结果重复
+	                    while(left < nums.length-1 && nums[left] == nums[left+1]){
+	                        left++;
+	                    }
+	                    //防止相等元素，导致结果重复
+	                    while(right > 0 && nums[right] == nums[right-1]){
+	                        right--;
+	                    }
+	                    left++;
+	                    right--;
+	                }
+	            }
+	        }
+	        return res;
+	        
+	    }
+	}
+
 
 leetcode 209. Minimum Size Subarray Sum
 
@@ -150,6 +197,7 @@ FIFO(先进先出)
 - 3.使用队列生成1~n的二进制数
 - 4.用两个栈实现队列
 
+##附加：跳表(Redis利用跳表实现有序集合Sorted Set)
     
 # 六、树 #
 树形结构是一种层次式的数据结构，由顶点和边组成，但不存在回路
@@ -161,6 +209,84 @@ FIFO(先进先出)
 高度差小于1
 
 - 二叉树
+94. 二叉树的中序遍历(非递归解法，递归解法较简单)
+
+	class Solution {
+
+	    public List<Integer> inorderTraversal(TreeNode root) {
+	        
+	        List<Integer> res = new ArrayList<>();
+	        Stack<TreeNode> stack = new Stack<>();
+	        TreeNode cur  = root;
+	        while(cur != null || !stack.isEmpty()){
+	            while(cur!=null){
+	                stack.push(cur);
+	                cur = cur.left;
+	            }
+	            cur = stack.pop();
+	            res.add(cur.val);
+	            cur = cur.right;
+	        }
+	        return res;
+	    }
+	}
+
+102. 二叉树的层次遍历
+
+	class Solution {
+
+	    public List<List<Integer>> levelOrder(TreeNode root) {
+	        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+	        List<List<Integer>> res = new ArrayList<List<Integer>>();
+	        if(root == null){
+	            return res;
+	        }
+	        queue.offer(root);
+	        while(!queue.isEmpty()) {
+	            int size = queue.size();
+	            List<Integer> list = new ArrayList<>();
+	            
+	            while(size > 0){
+	                TreeNode temp = queue.poll();
+	                if(temp.left != null){
+	                    queue.offer(temp.left);
+	                }
+	                if(temp.right != null){
+	                    queue.offer(temp.right);
+	                }
+	                list.add(temp.val);
+	                size--;
+	            }
+	            res.add(list);
+	        }
+	        return res;
+	    }
+	}
+
+124. 二叉树中的最大路径和
+
+	class Solution {
+	    
+	    int max = Integer.MIN_VALUE;
+	    public int maxPathSum(TreeNode root) {
+	        helper(root);
+	        return max;
+	    }
+	    
+	    public int helper(TreeNode root){
+	        if(root == null){
+	            return 0;
+	        }
+	        //左边最大
+	        int left = Math.max(0,helper(root.left));
+            //右边最大
+	        int right = Math.max(0,helper(root.right));
+            //加上根节点
+	        max = Math.max(max,(left+right+root.val));
+	        return Math.max(left,right)+root.val;
+	    }
+	}
+
 ### 二叉搜索树
 
 235. 二叉搜索树的最近公共祖先
@@ -303,6 +429,24 @@ FIFO(先进先出)
 
     }
     }
+
+
+538. 把二叉搜索树转换为累加树
+后序遍历(右+root为root，再left)
+
+	class Solution {
+	    int sum = 0;
+	    public TreeNode convertBST(TreeNode root) {
+	        if(root == null){
+	            return null;
+	        }
+	        convertBST(root.right);
+	        sum = sum + root.val;
+	        root.val = sum;
+	        convertBST(root.left);
+	        return root;
+	    }
+	}
 
 ### 平衡二叉树
 
@@ -527,6 +671,51 @@ N个顶点，E条边的时间复杂度：**1.用邻接表存储图，有O(N+E)2.
 - 检查图是否为树
 - 计算图的边数
 - 找到两个顶点之间的最短路径
+
+207. 课程表
+
+	class Solution {
+	    public boolean canFinish(int numCourses, int[][] prerequisites) {
+	        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();//建立图类似二维矩阵存储结构
+	        for(int i=0;i<numCourses;i++){
+	            graph.add(new ArrayList<Integer>());
+	        }
+	        for(int i=0;i<prerequisites.length;i++){
+	            //两个数组实际上建立了两门课之家的关系
+	            int course = prerequisites[i][0];
+	            int pre = prerequisites[i][1];
+	            graph.get(course).add(pre);
+	        }
+	        
+	        int[] visited = new int[numCourses];
+	        for(int i=0;i<numCourses;i++){
+	            if(dfs(i,graph,visited)){
+	                return false;
+	            }
+	        }
+	               return true;
+	    }
+	    
+	    public boolean dfs(int cur,ArrayList<ArrayList<Integer>> graph,int[] visited){
+	        if(visited[cur] == 1){
+	            return true;
+	        }
+	        if(visited[cur] == 2){
+	            return false;
+	        }
+	        
+	        visited[cur] = 1;
+	        
+	        for(int next:graph.get(cur)){
+	            if(dfs(next,graph,visited)){
+	                return true;
+	            }
+	        }
+	        visited[cur] = 2;
+	        return false;
+	    }     
+	}
+
 
 # 八.哈希表 #
 对象以键值对形式存储，存在唯一索引
@@ -924,10 +1113,62 @@ N个顶点，E条边的时间复杂度：**1.用邻接表存储图，有O(N+E)2.
 
 # 十、字符串 #
 
+394. 字符串解码
+
+72. 编辑距离
+
+438. 找到字符串中所有字母异位词
+
 # 十一、动态规划 #
 
 递归+记忆化搜索(类似)
 将原问题拆解成若干子问题，同时保存子问题的答案，使得每个子问题只求解一次。最终获得原问题的答案。
+
+309. 最佳买卖股票时机含冷冻期
+
+	class Solution {
+
+	    public int maxProfit(int[] prices) {
+	        
+	        if(prices.length == 0){
+	            return 0;
+	        }
+	        int [] buy = new int[prices.length];//第i天持股的最大收益
+	        int [] sell = new int [prices.length];//第i天不持股的最大收益
+	        buy[0] = -prices[0];//第一天买入收益
+	        sell[0] = 0;//第一天卖出收益
+	        for(int i=1;i<prices.length;i++){
+	            //前一天卖出与当前卖出的最大值
+	            sell[i] = Math.max(sell[i-1],buy[i-1]+prices[i]);
+	            //前一天买入，与当天买入的收益最大值
+	            buy[i] = Math.max(buy[i-1],(i>1? sell[i-2]:0)-prices[i]);
+	        }
+	        return sell[prices.length-1];
+	    }
+	}
+
+322. 零钱兑换
+
+	class Solution {
+
+	    public int coinChange(int[] coins, int amount) {
+	        
+	        int [] dp = new int [amount+1];
+	      
+	        for(int i=0;i<=amount;i++){
+	            dp[i] = amount+1;//初始化一个最大值，方便取最小值
+	        }
+	        dp[0] = 0;
+	        for(int i=1;i<=amount;i++){
+	            for(int j=0;j<coins.length;j++){
+	                if(i>=coins[j]){
+	                    dp[i] = Math.min(dp[i],dp[i-coins[j]]+1);
+	                }
+	            }
+	        }
+	        return dp[amount] > amount? -1:dp[amount];
+	    }
+	}
 
 # 十二、分治 #
 # 十三、贪心 #
@@ -1162,6 +1403,8 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
 
 ## 回溯算法的应用 ##
 
+
+
 ### 1.排列问题
 
 46. Permutations
@@ -1174,6 +1417,7 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
 
 ###组合问题
 
+
 77 Combinations  
 
 <div align="center"> <img src="leetcode77.png" width="450"/> </div><br>
@@ -1181,6 +1425,29 @@ s(digits[0...n-1) = letter(digits[0]) + s(digits[1...n-1])
 回溯法剪枝：不需要取4。
 
 39. Combination Sum
+
+	class Solution {
+	    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+	
+	        List<List<Integer>> res = new ArrayList<>();
+	        helper(candidates,target,0,new ArrayList<Integer>(),res);
+	        return res;
+	    }
+	    public void helper(int[] candidates,int target,int index,ArrayList<Integer> temp,List<List<Integer>> res){
+	        for(int i=index;i<candidates.length;i++){
+	            if(target - candidates[i] > 0){
+	                ArrayList<Integer> list = new ArrayList<Integer>(temp);
+	                list.add(candidates[i]);
+	                helper(candidates,target-candidates[i],i,list,res);
+	            }
+	            if(target - candidates[i] == 0){
+	                ArrayList<Integer> tmp = new ArrayList<Integer>(temp);
+	                tmp.add(candidates[i]);
+	                res.add(tmp);
+	            }
+	        }
+	    }
+	}
 
 40. Combination Sum II
 
