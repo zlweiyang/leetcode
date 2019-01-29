@@ -108,13 +108,87 @@ leetcode 11. Container With Most Water
 
 leetcode 209. Minimum Size Subarray Sum
 
-滑动窗口法。
+## 滑动窗口法。
 
 leetcode 3. Longest Substring Without
 
 leetcode 438.Find All Anagrams in a String   
 
 leetcode 76. Minimum Window Substring  
+
+## 二分查找(运行效率还不如for循环)
+
+34. 在排序数组中查找元素的第一个和最后一个位置
+
+	public int[] searchRange(int[] nums, int target) {
+
+	        if(nums.length==0||nums == null){
+	            return new int[]{-1,-1};
+	        }
+	        int start = findFirst(nums,target);
+	        if( start == -1){
+	            return new int[]{-1,-1};
+	        }
+	        return new int[]{start,findLast(nums,start,target)};
+	    }
+	    public int findFirst(int[] nums,int target){
+	        int left = 0;
+	        int right = nums.length-1;
+	        while(left < right){
+	           int mid = left + (right-left)/2;
+	           if(nums[mid]==target){
+	               right = mid;
+	           }
+	           else if(nums[mid]<target){
+	               left = mid+1;
+	           }else{
+	               right = mid-1;
+	           }
+	        }
+	        return nums[left] == target? left:-1;
+	    }
+	    public int findLast(int[] nums,int num,int target){
+	        int left = num;
+	        int right = nums.length-1;
+	        while(left < right){
+	           int mid = left + (right-left+1)/2;
+	           if(nums[mid]==target){
+	               left = mid;
+	           }
+	           else if(nums[mid]<target){
+	               left = mid+1;
+	           }else{
+	               right = mid-1;
+	           }
+	        }
+	        return nums[left] == target? left:-1;
+	    }
+
+	class Solution {
+	    public int[] searchRange(int[] nums, int target) {
+	        
+	       int first = -1;
+	       int i = 0; 
+	       for(;i<nums.length;i++){
+	           if(nums[i] == target){
+	               first = i;
+	               break;
+	           }
+	       }
+	       if(first == -1){
+	           return new int[]{-1,-1};
+	       }
+	       int count = -1;
+	       for(int j = i;j<nums.length;j++){
+	           if(nums[j] == target){
+	               count++;
+	           }
+	       }
+	       return new int[]{first,first+count};
+	       
+	    }
+	}
+
 
 # 二、链表 #
 链表包括单链表、双向链表以及循环链表
@@ -208,7 +282,24 @@ FIFO(先进先出)
 
 高度差小于1
 
-- 二叉树
+## 二叉树
+114. 二叉树展开为链表
+
+	class Solution {
+	    TreeNode prev = null;
+	    public void flatten(TreeNode root) {
+	        if(root == null){
+	            return;
+	        }
+	        flatten(root.right);//先递归到最右边，在回溯
+	        flatten(root.left);
+	        
+	        root.right = prev;//将当前节点的右指针指向prev
+	        root.left = null;//左指针置为null
+	        prev = root;//更新prev
+	    }
+	}
+
 94. 二叉树的中序遍历(非递归解法，递归解法较简单)
 
 	class Solution {
@@ -1115,9 +1206,116 @@ N个顶点，E条边的时间复杂度：**1.用邻接表存储图，有O(N+E)2.
 
 394. 字符串解码
 
+	class Solution {
+
+	    public String decodeString(String s) { 
+	        if(s.length() == 0){
+	            return "";
+	        }
+	        Stack<Integer> numstack = new Stack<Integer>();
+	        Stack<String> strstack = new Stack<String>();
+	        StringBuilder res = new StringBuilder("");
+	        int index = 0;
+	        while(index < s.length()){
+	            if(Character.isDigit(s.charAt(index))){
+	                int num = 0;
+	                while(Character.isDigit(s.charAt(index))){
+	                    num = num*10 + (s.charAt(index) - '0');
+	                    index++;
+	                }
+	                numstack.push(num);
+	            }
+	            else if(s.charAt(index) == '['){
+	                strstack.push(res.toString());
+	                res = new StringBuilder("");
+	                index++;
+	            }
+	            else if(s.charAt(index) == ']'){
+	                StringBuilder str = new StringBuilder(strstack.pop());
+	                int num = numstack.pop();
+	                for(int i=0;i<num;i++){
+	                    str.append(res.toString());
+	                }
+	                res = str;
+	                index++;
+	            }else{
+	                res.append(s.charAt(index++));
+	            }
+	        }
+	        return res.toString();
+	    }
+	}
+
 72. 编辑距离
 
 438. 找到字符串中所有字母异位词
+
+	class Solution {
+
+	    public List<Integer> findAnagrams(String s, String p) {
+	        List<Integer> res = new ArrayList<Integer>();
+	        int slen = s.length();
+	        int plen = p.length();
+	        
+	        int[] arr = new int[26];
+	        for(int i=0;i<plen;i++){
+	            arr[p.charAt(i)-'a']++;
+	        }
+	        int start=0;
+	        int end=0;
+	        int diff = plen;
+	        while(end<slen&&start<=end){
+	            if(--arr[s.charAt(end)-'a'] >= 0){
+	                diff--;
+	            }
+	            while(diff==0){
+	                int len = end-start+1;
+	                if(len == plen){
+	                    res.add(start);
+	                }
+                    //找到异位词
+	                if(++arr[s.charAt(start)-'a']>0){
+	                    diff++;
+	                }
+	                start++;
+	            }
+	            end++;
+	        }
+	        return res;
+	    }
+	}
+
+5. 最长回文子串
+
+	class Solution { 
+
+	    String res = "";
+	    public String longestPalindrome(String s) {
+	        if(s==null||s.length()==0){
+	            return res;
+	        }
+	        if(s.length()==1){
+	            return s;
+	        }
+	        for(int i=1;i<s.length();i++){
+	            helper(s,i,i);//奇数情况
+	            helper(s,i-1,i);//偶数情况
+	        }
+	        return res;
+	    }
+        //左右向外扩展，更新最大值
+	    public void helper(String s,int left,int right){
+	        while(left>=0&&right<s.length()&& s.charAt(left) == s.charAt(right)){
+	            left--;
+	            right++;
+	        }
+	        String cur = s.substring(left+1,right);
+            //如果当前字符串大于结果，则更新最大
+	        if(cur.length() > res.length()){
+	            res = cur;
+	        }
+	    }
+	}
 
 # 十一、动态规划 #
 
